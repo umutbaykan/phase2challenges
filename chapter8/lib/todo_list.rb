@@ -8,23 +8,11 @@ class TodoList
   end
 
   def incomplete
-    arr = []
-    @todo_list.map do |item| 
-      if item.done? == false
-        arr.push(item)
-      end
-    end
-    return arr
+    @todo_list.select {|item| item unless item.done? } 
   end
 
   def complete
-    arr = []
-    @todo_list.map do |item| 
-      if item.done? == true
-        arr.push(item)
-      end
-    end
-    return arr
+    @todo_list.select {|item| item if item.done? } 
   end
 
   def give_up!

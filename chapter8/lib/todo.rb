@@ -1,7 +1,6 @@
 class Todo
   def initialize(task) 
-    fail "Need string input!" unless task.is_a? String 
-    fail "Need string input!" unless task.length > 0
+    fail "Need string input!" unless task.is_a?(String) && task.length > 0
     @task = task
     @done = false
   end
