@@ -5,16 +5,52 @@ describe Restaurant do
     io = double :io
     expect{Restaurant.new(io)}.to raise_error "No dishes available!"
   end
-  
+
   context "when multiple dishes are passed inside the menu" do
-    it "prints out the menu and prices for the user" do
+    it "shows the customer the menu when pressed 1" do
+      io = double :io
+      fake_food1 = double(:fake_dish, dish:"Chicken", price:6, format_dish: "Dish: Chicken - Price: 6")
+      fake_food2 = double(:fake_dish, dish:"Spinach", price:4, format_dish: "Dish: Spinach - Price: 4")
+      prompt_phrase = "What would you like to do? 1 to show menu, 2 to order food, 3 to show basket, 4 to reset basket, 5 to checkout, 6 to quit without ordering"
+      restaurant = Restaurant.new(io, fake_food1, fake_food2)
+      expect(io).to receive(:puts).with(prompt_phrase)
+      expect(io).to receive(:gets).and_return("1")
+      expect(io).to receive(:puts).with("Dish: Chicken - Price: 6")
+      expect(io).to receive(:puts).with("Dish: Spinach - Price: 4")
+      expect(io).to receive(:puts).with(prompt_phrase)
+      expect(io).to receive(:gets).and_return("6")
+      restaurant.list_options_to_customer
+    end
+      
+    it "successfully exits the interface when pressed 6" do
       io = double :io
       fake_food1 = double(:fake_dish, dish:"Chicken", price:6)
       fake_food2 = double(:fake_dish, dish:"Spinach", price:4)
+      prompt_phrase = "What would you like to do? 1 to show menu, 2 to order food, 3 to show basket, 4 to reset basket, 5 to checkout, 6 to quit without ordering"
       restaurant = Restaurant.new(io, fake_food1, fake_food2)
-      expect(io).to receive(:puts).with("Dish: Chicken - Price: 6")
-      expect(io).to receive(:puts).with("Dish: Spinach - Price: 4")
-      restaurant.show_menu
+      expect(io).to receive(:puts).with(prompt_phrase)
+      expect(io).to receive(:gets).and_return("6")
+      restaurant.list_options_to_customer
     end
+
+  #     # expect(io).to receive(:puts).with("Dish: Chicken - Price: 6")
+  #     # expect(io).to receive(:puts).with("Dish: Spinach - Price: 4")
+  #     # restaurant.show_menu
+
+  # #   it "adds them to customer basket based on choice and returns the invoice" do
+  # #     io = double :io
+  # #     fake_food1 = double(:fake_dish, dish:"Chicken", price:6)
+  # #     fake_food2 = double(:fake_dish, dish:"Spinach", price:4)
+  # #     fake_food3 = double(:fake_dish, dish:"Beans", price:2)
+  # #     restaurant = Restaurant.new(io, fake_food1, fake_food2, fake_food3)
+  # #     expect(io).to receive(:puts).with("Which dish would you like? Type stop to finish ordering.")
+  # #     expect(io).to receive(:gets).and_return("Chicken")
+  # #     expect(io).to receive(:puts).with("Which dish would you like? Type stop to finish ordering.")
+  # #     expect(io).to receive(:gets).and_return("Spinach")
+  # #     expect(io).to receive(:puts).with("Which dish would you like? Type stop to finish ordering.")
+  # #     expect(io).to receive(:gets).and_return("stop")
+  # #     restaurant.add_dish
+  # #     expect(io).to receive(:puts)
+  # #   end
   end
 end

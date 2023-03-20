@@ -8,6 +8,10 @@ class Dish
     return @dish
   end
 
+  def format_dish
+    return "Dish: #{@dish} - Price: #{@price}"
+  end
+
   def price
     return @price
   end
