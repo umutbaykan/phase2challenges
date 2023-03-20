@@ -1,3 +1,6 @@
+require 'text_sender'
+require 'date'
+
 class Restaurant
   def initialize(io, *dish)
     @available_dishes = [*dish]
@@ -21,7 +24,7 @@ class Restaurant
         when "4"
           reset_basket
         when "5"
-          # checkout
+          checkout
         when "6"
           break
       end
@@ -38,10 +41,7 @@ class Restaurant
       @io.puts "You have not ordered anything."
     else
       @io.puts "Here is your current basket:"
-      @customer_basket.each do |dish| 
-        @io.puts("#{dish.format_dish}")
-        @customer_order_total += dish.price
-      end
+      @customer_basket.each {|dish| @io.puts("#{dish.format_dish}")}
       @io.puts "Your total is: #{@customer_order_total}"
     end
   end
@@ -57,9 +57,21 @@ class Restaurant
     loop do
       choice = @io.gets.chomp
       break if choice == "stop"
-      @available_dishes.each {|dish| @customer_basket << dish if dish.dish == choice}
+      @available_dishes.each do |dish| 
+        if dish.dish == choice
+          @customer_basket << dish 
+          @customer_order_total += dish.price
+        end
+      end
     end
   end
 
-
+  def checkout
+    fail "You have not ordered anything." if @customer_basket == []
+    text_sender = OrderSender.new
+    t = (Time.now + 1800).strftime("%H:%M")
+    message = "Your basket with a total cost of £#{@customer_order_total} will be delivered by #{t}"
+    @io.puts message
+    # text_sender.message(@message)
+  end
 end

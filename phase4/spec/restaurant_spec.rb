@@ -103,6 +103,27 @@ describe Restaurant do
       restaurant.list_options_to_customer
     end
 
+    it "sends an sms message to customer with the order list and total price as well as time when pressed 5" do
+      io = double :io
+      fake_food1 = double(:fake_dish, dish:"Chicken", price:6, format_dish: "Dish: Chicken - Price: 6")
+      fake_food2 = double(:fake_dish, dish:"Spinach", price:4, format_dish: "Dish: Spinach - Price: 4")
+      fake_food3 = double(:fake_dish, dish:"Beans", price:3, format_dish: "Dish: Beans - Price: 3")
+      prompt_phrase = "What would you like to do? 1 to show menu, 2 to order food, 3 to show basket, 4 to reset basket, 5 to checkout, 6 to quit without ordering"
+      restaurant = Restaurant.new(io, fake_food1, fake_food2, fake_food3)
+      expect(io).to receive(:puts).with(prompt_phrase)
+      expect(io).to receive(:gets).and_return("2")
+      expect(io).to receive(:puts).with("Which dish would you like? Type stop to finish ordering.")
+      expect(io).to receive(:gets).and_return("Chicken")
+      expect(io).to receive(:gets).and_return("Beans")
+      expect(io).to receive(:gets).and_return("stop")
+      expect(io).to receive(:puts).with(prompt_phrase)
+      expect(io).to receive(:gets).and_return("5")
+      expect(io).to receive(:puts).with("Message successfully sent")
+      expect(io).to receive(:puts).with(prompt_phrase)
+      expect(io).to receive(:gets).and_return("6")
+      restaurant.list_options_to_customer
+    end
+
     it "successfully exits the interface when pressed 6" do
       io = double :io
       fake_food1 = double(:fake_dish, dish:"Chicken", price:6)
@@ -113,25 +134,5 @@ describe Restaurant do
       expect(io).to receive(:gets).and_return("6")
       restaurant.list_options_to_customer
     end
-
-  #     # expect(io).to receive(:puts).with("Dish: Chicken - Price: 6")
-  #     # expect(io).to receive(:puts).with("Dish: Spinach - Price: 4")
-  #     # restaurant.show_menu
-
-  # #   it "adds them to customer basket based on choice and returns the invoice" do
-  # #     io = double :io
-  # #     fake_food1 = double(:fake_dish, dish:"Chicken", price:6)
-  # #     fake_food2 = double(:fake_dish, dish:"Spinach", price:4)
-  # #     fake_food3 = double(:fake_dish, dish:"Beans", price:2)
-  # #     restaurant = Restaurant.new(io, fake_food1, fake_food2, fake_food3)
-  # #     expect(io).to receive(:puts).with("Which dish would you like? Type stop to finish ordering.")
-  # #     expect(io).to receive(:gets).and_return("Chicken")
-  # #     expect(io).to receive(:puts).with("Which dish would you like? Type stop to finish ordering.")
-  # #     expect(io).to receive(:gets).and_return("Spinach")
-  # #     expect(io).to receive(:puts).with("Which dish would you like? Type stop to finish ordering.")
-  # #     expect(io).to receive(:gets).and_return("stop")
-  # #     restaurant.add_dish
-  # #     expect(io).to receive(:puts)
-  # #   end
   end
 end
