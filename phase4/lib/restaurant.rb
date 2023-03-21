@@ -2,8 +2,9 @@ require 'text_sender'
 require 'date'
 
 class Restaurant
-  def initialize(io, *dish)
+  def initialize(current_time, io, *dish)
     @available_dishes = [*dish]
+    @current_time = current_time
     fail "No dishes available!" if @available_dishes == []
     @io = io
     @customer_basket = []
@@ -67,11 +68,11 @@ class Restaurant
   end
 
   def checkout
-    fail "You have not ordered anything." if @customer_basket == []
-    text_sender = OrderSender.new
-    t = (Time.now + 1800).strftime("%H:%M")
+    fail "You did not order anything." if @customer_basket == []
+    t = (@current_time + 1800).strftime("%H:%M")
     message = "Your basket with a total cost of £#{@customer_order_total} will be delivered by #{t}"
     @io.puts message
+    text_sender = OrderSender.new
     # text_sender.message(@message)
   end
 end
