@@ -1,5 +1,6 @@
-require 'text_sender'
+require_relative 'text_sender.rb'
 require 'date'
+require_relative 'dish.rb'
 
 class Restaurant
   def initialize(io, *dish)
@@ -31,7 +32,7 @@ class Restaurant
         when "5"
           checkout
         when "6"
-          break
+          return "Exiting"
       end
     end  
   end    
