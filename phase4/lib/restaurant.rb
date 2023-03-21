@@ -68,11 +68,11 @@ class Restaurant
   end
 
   def checkout
-    fail "You did not order anything." if @customer_basket == []
+    raise "You did not order anything." if @customer_basket == []
     t = (@current_time + 1800).strftime("%H:%M")
     message = "Your basket with a total cost of £#{@customer_order_total} will be delivered by #{t}"
     @io.puts message
     text_sender = OrderSender.new
-    # text_sender.message(@message)
+    # text_sender.message(message)
   end
 end

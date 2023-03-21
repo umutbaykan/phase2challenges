@@ -124,16 +124,13 @@ describe Restaurant do
       restaurant.list_options_to_customer
     end
 
-    # it "raises an error if the customer tries to checkout wiwth an empty basket" do
-    #   io = double :io
-    #   fake_food1 = double(:fake_dish, dish:"Chicken", price:6, format_dish: "Dish: Chicken - Price: 6")
-    #   restaurant = Restaurant.new(current_time, io, fake_food1)
-    #   expect(io).to receive(:puts).with(prompt_phrase)
-    #   expect(io).to receive(:gets).and_return("5")
-    #   expect{restaurant.checkout}.to raise_error "You did not order anything."
-    #   restaurant.list_options_to_customer
-    # end
-
+    it "raises an error if the customer tries to checkout with an empty basket" do
+      io = double :io
+      fake_food1 = double(:fake_dish, dish:"Chicken", price:6, format_dish: "Dish: Chicken - Price: 6")
+      restaurant = Restaurant.new(current_time, io, fake_food1)
+      expect{restaurant.checkout}.to raise_error "You did not order anything."
+    end
+    
     it "successfully exits the interface when pressed 6" do
       io = double :io
       fake_food1 = double(:fake_dish, dish:"Chicken", price:6)
