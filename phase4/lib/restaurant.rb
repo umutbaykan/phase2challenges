@@ -2,13 +2,17 @@ require 'text_sender'
 require 'date'
 
 class Restaurant
-  def initialize(current_time, io, *dish)
+  def initialize(io, *dish)
     @available_dishes = [*dish]
-    @current_time = current_time
+    @current_time = Time.now
     fail "No dishes available!" if @available_dishes == []
     @io = io
     @customer_basket = []
     @customer_order_total = 0
+  end
+
+  def swap_time(time)
+    @current_time = time
   end
 
   def list_options_to_customer
@@ -67,12 +71,12 @@ class Restaurant
     end
   end
 
-  def checkout
+  def checkout(fake_client=nil)
     raise "You did not order anything." if @customer_basket == []
     t = (@current_time + 1800).strftime("%H:%M")
     message = "Your basket with a total cost of £#{@customer_order_total} will be delivered by #{t}"
+    fake_client ? text_sender = OrderSender.new(fake_client) : text_sender = OrderSender.new
+    text_sender.message(message)
     @io.puts message
-    text_sender = OrderSender.new
-    # text_sender.message(message)
   end
 end
