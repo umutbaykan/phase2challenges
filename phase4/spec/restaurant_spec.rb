@@ -8,14 +8,6 @@ describe Restaurant do
   let(:fake_food3) { double(:fake_dish, dish:"Beans", price:3, format_dish: "Dish: Beans - Price: 3") }
   let(:io) { double :io }
   let(:restaurant) { Restaurant.new(io, fake_food1, fake_food2, fake_food3)}
-  
-  # before do
-  #   io = double :io
-  #   fake_food1 = double(:fake_dish, dish:"Chicken", price:6, format_dish: "Dish: Chicken - Price: 6")
-  #   fake_food2 = double(:fake_dish, dish:"Spinach", price:4, format_dish: "Dish: Spinach - Price: 4")
-  #   fake_food3 = double(:fake_dish, dish:"Beans", price:3, format_dish: "Dish: Beans - Price: 3")
-  #   @restaurant = Restaurant.new(io, fake_food1, fake_food2, fake_food3) 
-  # end
 
   it "lists items in the menu" do
     expect(io).to receive(:puts).with("Dish: Chicken - Price: 6")
@@ -61,31 +53,27 @@ describe Restaurant do
     expect(restaurant.list_options_to_customer).to eq "Exiting"
   end
 
-  # describe "when passed in a mock for twilio" do
-  #   it "sends an sms message to customer with the order list and total price as well as time when pressed 5" do
-  #     fake_time = Time.new(2023, 03, 21, 9, 30, 00)
-  #     fake_client = double(:fake_client)
-  #     order_message = "Your basket with a total cost of £9 will be delivered by 10:00"
-  #     params = {body: "#{order_message}", to: ENV["TWILIO_RECEIVER"], from: ENV["TWILIO_SENDER"]}
-  #     allow(fake_client).to receive_message_chain(:messages, :create).with(params).and_return("Object verifier")
-  #     restaurant.swap_time(fake_time)
-  #   #     expect(io).to receive(:puts).with(prompt_phrase)
-  #   #     expect(io).to receive(:gets).and_return("2")
-  #   #     expect(io).to receive(:puts).with("Which dish would you like? Type stop to finish ordering.")
-  #   #     expect(io).to receive(:gets).and_return("Chicken")
-  #   #     expect(io).to receive(:gets).and_return("Beans")
-  #   #     expect(io).to receive(:gets).and_return("stop")
-  #   #     expect(io).to receive(:puts).with(prompt_phrase)
-  #   #     expect(io).to receive(:gets).and_return("6")
-  #   #     restaurant.list_options_to_customer
-  #   #     expect(io).to receive(:puts).with(order_message)
-  #   #     restaurant.checkout(fake_client)
-  #   end
-  # end
+  describe "when passed in a mock for twilio" do
+    it "sends an sms message to customer with the order list and total price as well as time when pressed 5" do
+      fake_time = Time.new(2023, 03, 21, 9, 30, 00)
+      fake_client = double(:fake_client)
+      order_message = "Your basket with a total cost of £9 will be delivered by 10:00"
+      params = {body: "#{order_message}", to: ENV["TWILIO_RECEIVER"], from: ENV["TWILIO_SENDER"]}
+      allow(fake_client).to receive_message_chain(:messages, :create).with(params).and_return("Object verifier")
+      restaurant.swap_time(fake_time)
+      expect(io).to receive(:puts).with("Which dish would you like? Type stop to finish ordering.")
+      expect(io).to receive(:gets).and_return("Chicken")
+      expect(io).to receive(:gets).and_return("Beans")
+      expect(io).to receive(:gets).and_return("stop")
+      restaurant.order_food
+      expect(io).to receive(:puts).with(order_message)
+      restaurant.checkout(fake_client)
+    end
+  end
 
-  # it "raises an error when no dishes are passed inside the menu" do
-  #   io = double :io
-  #   expect{Restaurant.new(io)}.to raise_error "No dishes available!"
-  # end
+  it "raises an error when no dishes are passed inside the menu" do
+    io = double :io
+    expect{Restaurant.new(io)}.to raise_error "No dishes available!"
+  end
       
 end
