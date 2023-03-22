@@ -4,7 +4,7 @@ describe OrderSender do
   order_message = "Your basket with a total cost of £9 will be delivered by 18:30"
 
   ## this is the test that sends an actual message. xit it unless you want to spend credits
-  xit "sends a message to the user with the total price and estimated date" do
+  it "sends a message to the user with the total price and estimated date" do
     message_sender = OrderSender.new
     expect(message_sender.message(order_message)).to eq "Message successfully sent!"
   end
