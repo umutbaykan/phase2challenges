@@ -14,9 +14,8 @@ class UserInterface
     return @ship_symbols[ship]
   end
 
-  def intro_messages
-    show "Welcome to Battleships!"
-    show "Set up your ships first."
+  def ship_placement_initiate
+    show "Okay #{@player}, lets get started by placing your ships."
   end
 
   def ship_placement_status

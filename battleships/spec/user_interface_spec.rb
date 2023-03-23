@@ -5,10 +5,9 @@ describe UserInterface do
   let(:io) { double(:io) }
   let(:ui) { UserInterface.new(io, fake_player)}
   
-  it "shows intro messages" do
-    expect(io).to receive(:puts).with("Welcome to Battleships!")
-    expect(io).to receive(:puts).with("Set up your ships first.")
-    ui.intro_messages
+  it "shows ship placement intro" do
+    expect(io).to receive(:puts).with("Okay #{fake_player}, lets get started by placing your ships.")
+    ui.ship_placement_initiate
   end
 
   it "shows the user the ships they have remaining to place" do
