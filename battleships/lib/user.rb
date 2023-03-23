@@ -1,7 +1,12 @@
 class User
-  def initialize(board)
+  def initialize(board, name)
     @ships = [:frigate, :destroyer, :cruiser, :battleship]
     @board = board
+    @name = name
+  end
+
+  def name
+    @name
   end
 
   def user_has_ships?

@@ -17,7 +17,6 @@ class Game
   end
 
   def place_user_ships
-    
   end
 
   #----- PLAYER SWAPPING -----#
@@ -37,9 +36,25 @@ class Game
     
     ### Initialize the boards and players
     board_1, board_2 = Board.new(board_size), Board.new(board_size)
-    player_1, player_2 = User.new(board_1), User.new(board_2)
-    ui = UserInterface.new(@io, @current_player)    
+    player_1, player_2 = User.new(board_1, "P1"), User.new(board_2, "P2")  
     add_players_to_game(player_1, player_2)
+    ui = UserInterface.new(@io, @current_player)  
+    ui.welcome
     ui.ship_placement_initiate
+    while @current_player.user_has_ships?
+      ui.ship_placement_status
+      parameters = ui.prompt_for_ship_placement
+      if @current_player.board.check_if_ship_position_suitable(parameters)
+        @current_player.board.place_ship(parameters)
+        placed_ship = parameters[:ship_name]
+        puts placed_ship
+        @current_player.remove_ship_from_list(placed_ship)
+        ui.ship_placed_successfully
+      else
+        ui.ship_placed_unsuccessfully
+      end
+      ui.your_board_looks_like
+      @current_player.board.show_board
+    end 
   end
 end

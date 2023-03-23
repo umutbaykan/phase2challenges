@@ -43,6 +43,10 @@ class Board
     return true
   end
 
+  def length
+    @board.length
+  end
+
   def return_board_in_array
     @board
   end

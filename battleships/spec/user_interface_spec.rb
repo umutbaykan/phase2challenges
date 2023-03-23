@@ -1,12 +1,12 @@
 require 'user_interface'
 
 describe UserInterface do
-  let(:fake_player) { double(:fake_player, list_ships:[:frigate, :destroyer, :cruiser, :battleship]) }
+  let(:fake_player) { double(:fake_player, list_ships:[:frigate, :destroyer, :cruiser, :battleship], name: "player") }
   let(:io) { double(:io) }
   let(:ui) { UserInterface.new(io, fake_player)}
   
   it "shows ship placement intro" do
-    expect(io).to receive(:puts).with("Okay #{fake_player}, lets get started by placing your ships.")
+    expect(io).to receive(:puts).with("Okay #{fake_player.name}, lets get started by placing your ships.")
     ui.ship_placement_initiate
   end
 
@@ -55,7 +55,8 @@ describe UserInterface do
         row: 4,
         ship_length: 4,
         ship_symbol: "C",
-        ship_orientation: "h"
+        ship_orientation: "h",
+        ship_name: :cruiser
       }
       expect(ui.prompt_for_ship_placement).to eq parameters
     end

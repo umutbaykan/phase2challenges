@@ -4,7 +4,8 @@ describe Game do
 
   let(:player1) { double(:player1, ships: [:frigate, :destroyer, :cruiser, :battleship] )}
   let(:player2) { double(:player2, ships: [:frigate, :destroyer, :cruiser, :battleship] )}
-  let(:game) { Game.new }
+  let(:io) { double :io }
+  let(:game) { Game.new(io) }
 
   it "initializes" do
     game.add_players_to_game(player1, player2)
