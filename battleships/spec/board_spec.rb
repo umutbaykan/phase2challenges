@@ -60,6 +60,26 @@ describe Board do
         parameters = {column: 2, row: 5, ship_length: 3, ship_orientation: "v"}
         expect(board.check_if_ship_position_suitable(parameters)).to eq false
       end
+      context "and if there are ships already on the board" do
+        parameters = {column: 4, row: 4, ship_length: 3, ship_symbol: "C", ship_orientation: "h"}
+        board.place_ship(parameters)
+        it "returns false if there is another ship there" do
+          check_parameters = {column: 6, row: 1, ship_length: 4, ship_orientation: "v"}
+          expect(board.check_if_ship_position_suitable(check_parameters)).to eq false
+        end
+        it "returns false if there is another ship there" do
+          check_parameters = {column: 1, row: 4, ship_length: 4, ship_orientation: "h"}
+          expect(board.check_if_ship_position_suitable(check_parameters)).to eq false
+        end
+        it "returns true if there is another ship on the board, but is not on the same grid as this one" do
+          check_parameters = {column: 3, row: 1, ship_length: 4, ship_orientation: "v"}
+          expect(board.check_if_ship_position_suitable(check_parameters)).to eq true
+        end
+        it "returns true if there is another ship on the board, but is not on the same grid as this one" do
+          check_parameters = {column: 4, row: 3, ship_length: 3, ship_orientation: "h"}
+          expect(board.check_if_ship_position_suitable(check_parameters)).to eq true
+        end
+      end
     end
   end
 end

@@ -26,12 +26,19 @@ class Board
     row = params[:row] - 1
     ship_length = params[:ship_length]
     ship_orientation = params[:ship_orientation]
+
     #Checking if the ship fits the board
     if (column + ship_length) > @board[row].length && ship_orientation == "h"
       return false
     elsif (row + ship_length) > @board.length && ship_orientation == "v"
       return false
+    end
+
     #Checking if there are existing ships there
+    if ship_orientation == "h" 
+      @board[row].each.with_index {|char, index| return false if (column...(column+ship_length)).include?(index) && char != " . " }
+    elsif ship_orientation == "v"
+      @board[row, ship_length].each {|row| return false if row[column] != " . "}
     end
     return true
   end
@@ -42,5 +49,8 @@ class Board
 end
 
 # board = Board.new(6)
-# parameters = {column: 4, row: 3, ship_length: 5, ship_symbol: "C", ship_orientation: "v"}
+# parameters = {column: 4, row: 4, ship_length: 3, ship_symbol: "C", ship_orientation: "h"}
+# board.place_ship(parameters)
+# # board.show_board
+# parameters = {column: 6, row: 1, ship_length: 3, ship_symbol: "C", ship_orientation: "v"}
 # puts board.check_if_ship_position_suitable(parameters)
