@@ -27,7 +27,7 @@ class Game
         ui.ship_placed_unsuccessfully
       end
       ui.your_board_looks_like
-      @current_player.board.show_board
+      @current_player.board.show_to_player
     end
   end
 
@@ -50,5 +50,8 @@ class Game
       swap_players
       system "clear"
     end 
+    ## Players have now placed their ships. Swapping back to P1 and starting the game
+    swap_players
+
   end
 end

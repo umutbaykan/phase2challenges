@@ -1,10 +1,7 @@
 class Board
   def initialize(board_size)
     @board = Array.new(board_size) { Array.new(board_size, " . ") }
-  end
-
-  def show_board
-    @board.each {|row| puts row.join}
+    @ship_symbol_stack = [" F "," C "," D "," B "]
   end
 
   def place_ship(params)
@@ -43,6 +40,40 @@ class Board
     return true
   end
 
+  def show_board(board)
+    board.each {|row| puts row.join}
+  end
+
+  def show_to_opponent
+    duplicate_board = @board.map(&:clone)
+    duplicate_board.map! {|row| row.map! {|char| ship_symbol_stack.include?(char) ? char = " . " : char }}
+    show_board(duplicate_board)
+  end
+
+  def show_to_player
+    duplicate_board = @board.map(&:clone)
+    duplicate_board.map! {|row| row.map! {|char| char == " O " ? char = " . " : char }}
+    show_board(duplicate_board)
+  end
+
+  def bomb(coordinates)
+    column = coordinates[:column] - 1
+    row = coordinates[:row] - 1
+    strike_point = @board[row][column]
+    if strike_point == " . " || strike_point == " O " || strike_point == " X "
+      if strike_point == " . "
+        @board[row][column] = " O "
+        return {status: false, message: "Missed!"} 
+      else
+        return {status: false, message: "You already fired here!"}
+      end
+    else
+      @board[row][column] = " X "
+      return {status: false, message: "Hit!"} 
+    end
+  end
+  
+
   def length
     @board.length
   end
@@ -55,6 +86,12 @@ end
 # board = Board.new(6)
 # parameters = {column: 4, row: 4, ship_length: 3, ship_symbol: "C", ship_orientation: "h"}
 # board.place_ship(parameters)
-# # board.show_board
-# parameters = {column: 6, row: 1, ship_length: 3, ship_symbol: "C", ship_orientation: "v"}
-# puts board.check_if_ship_position_suitable(parameters)
+# board.bomb({column: 1, row: 1})
+# board.bomb({column: 4, row: 4})
+# board.show_actual_board
+# puts ""
+# board.show_to_opponent
+# puts ""
+# board.show_to_player
+# puts ""
+# board.show_actual_board
