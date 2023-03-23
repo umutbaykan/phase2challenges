@@ -6,6 +6,10 @@ class UserInterface
     @ship_symbols = {frigate: "F", destroyer: "D", cruiser: "C", battleship: "B"}
   end
 
+  def swap_to_player(new_player)
+    @player = new_player
+  end
+
   def ship_size(ship)
     return @ship_sizes[ship]
   end

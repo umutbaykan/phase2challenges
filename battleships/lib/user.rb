@@ -1,6 +1,8 @@
 class User
   def initialize(board, name)
     @ships = [:frigate, :destroyer, :cruiser, :battleship]
+    @ships = [:cruiser, :battleship]
+
     @board = board
     @name = name
   end

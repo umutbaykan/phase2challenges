@@ -1,8 +1,5 @@
 $LOAD_PATH << "lib"
 require "game"
-require "user_interface"
-require "board"
-require "user"
 
 #--- Terminal Class ---#
 class TerminalIO
@@ -17,9 +14,6 @@ end
 io = TerminalIO.new
 #---------------------#
 
+game = Game.new(io, 10)
+game.run
 
-
-game = Game.new(io)
-game.run(10)
-# user_interface = UserInterface.new(io, game)
-# user_interface.run
