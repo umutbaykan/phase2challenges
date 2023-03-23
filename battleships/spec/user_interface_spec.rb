@@ -1,50 +1,65 @@
-require "user_interface"
+require 'user_interface'
 
-RSpec.describe UserInterface do
-  describe "ship setup scenario" do
-    it "allows the user to set up ships" do
-      io = double(:io)
-      game = double(:game, rows: 10, cols: 10)
-      interface = UserInterface.new(io, game)
-      expect(io).to receive(:puts).with("Welcome to the game!")
-      expect(io).to receive(:puts).with("Set up your ships first.")
-      expect(game).to receive(:unplaced_ships).and_return([
-        double(:ship, length: 2),
-        double(:ship, length: 5),
-      ])
-      expect(io).to receive(:puts).with("You have these ships remaining: 2, 5")
+describe UserInterface do
+  let(:fake_player) { double(:fake_player, list_ships:[:frigate, :destroyer, :cruiser, :battleship]) }
+  let(:io) { double(:io) }
+  let(:ui) { UserInterface.new(io, fake_player)}
+  
+  it "shows intro messages" do
+    expect(io).to receive(:puts).with("Welcome to Battleships!")
+    expect(io).to receive(:puts).with("Set up your ships first.")
+    ui.intro_messages
+  end
+
+  it "shows the user the ships they have remaining to place" do
+    expect(io).to receive(:puts).with("You have these ships remaining: frigate, destroyer, cruiser, battleship")
+    expect(io).to receive(:puts).with("Frigate is 2 tiles long.")
+    expect(io).to receive(:puts).with("Destroyer is 3 tiles long.")
+    expect(io).to receive(:puts).with("Cruiser is 4 tiles long.")
+    expect(io).to receive(:puts).with("Battleship is 5 tiles long.")
+    ui.ship_placement_status
+  end
+
+  it "shows the user the ships they have remaining to place" do
+    ui_with_two_ships = UserInterface.new(io, double(:fake_player2, list_ships:[:cruiser, :battleship]))
+    expect(io).to receive(:puts).with("You have these ships remaining: cruiser, battleship")
+    expect(io).to receive(:puts).with("Cruiser is 4 tiles long.")
+    expect(io).to receive(:puts).with("Battleship is 5 tiles long.")
+    ui_with_two_ships.ship_placement_status
+  end
+
+  context "when the user tries to place their ships" do
+    it "makes sure the information provided is valid" do
+      allow(fake_player).to receive_message_chain(:board, :length).and_return 6
       expect(io).to receive(:puts).with("Which do you wish to place?")
-      expect(io).to receive(:gets).and_return("2\n")
+      expect(io).to receive(:gets).and_return("cruuser")
+      expect(io).to receive(:puts).with("No such ship type available.")
+      expect(io).to receive(:puts).with("Which do you wish to place?")
+      expect(io).to receive(:gets).and_return("Cruiser")
       expect(io).to receive(:puts).with("Vertical or horizontal? [vh]")
-      expect(io).to receive(:gets).and_return("v\n")
+      expect(io).to receive(:gets).and_return("z")
+      expect(io).to receive(:puts).with("That is not a valid direction.")
+      expect(io).to receive(:puts).with("Vertical or horizontal? [vh]")
+      expect(io).to receive(:gets).and_return("h")
       expect(io).to receive(:puts).with("Which row?")
-      expect(io).to receive(:gets).and_return("3\n")
+      expect(io).to receive(:gets).and_return("7")
+      expect(io).to receive(:puts).with("There are not enough rows on the board.")
+      expect(io).to receive(:puts).with("Which row?")
+      expect(io).to receive(:gets).and_return("4")
       expect(io).to receive(:puts).with("Which column?")
-      expect(io).to receive(:gets).and_return("2\n")
-      expect(io).to receive(:puts).with("OK.")
-      expect(game).to receive(:place_ship).with({
-        length: 2,
-        orientation: :vertical,
-        row: 3,
-        col: 2
-      })
-      expect(io).to receive(:puts).with("This is your board now:")
-      allow(game).to receive(:ship_at?).and_return(false)
-      allow(game).to receive(:ship_at?).with(2, 3).and_return(true)
-      allow(game).to receive(:ship_at?).with(2, 4).and_return(true)
-      expect(io).to receive(:puts).with([
-        "..........",
-        "..........",
-        ".S........",
-        ".S........",
-        "..........",
-        "..........",
-        "..........",
-        "..........",
-        "..........",
-        ".........."
-      ].join("\n"))
-      interface.run
+      expect(io).to receive(:gets).and_return("7")
+      expect(io).to receive(:puts).with("There are not enough columns on the board.")
+      expect(io).to receive(:puts).with("Which column?")
+      expect(io).to receive(:gets).and_return("4")
+      parameters = {
+        column: 4,
+        row: 4,
+        ship_length: 4,
+        ship_symbol: "C",
+        ship_orientation: "h"
+      }
+      expect(ui.prompt_for_ship_placement).to eq parameters
     end
+
   end
 end
