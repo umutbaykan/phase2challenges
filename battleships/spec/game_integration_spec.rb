@@ -95,11 +95,11 @@ describe Game do
       expect(io).to receive(:puts).with("Which do you wish to place?")
       expect(io).to receive(:gets).and_return("Battleship")
       expect(io).to receive(:puts).with("Vertical or horizontal? [vh]")
-      expect(io).to receive(:gets).and_return("v")
+      expect(io).to receive(:gets).and_return("h")
       expect(io).to receive(:puts).with("Which row?")
-      expect(io).to receive(:gets).and_return("1")
+      expect(io).to receive(:gets).and_return("4")
       expect(io).to receive(:puts).with("Which column?")
-      expect(io).to receive(:gets).and_return("1")
+      expect(io).to receive(:gets).and_return("4")
       expect(io).to receive(:puts).with("Ship placed successfully!")
       expect(io).to receive(:puts).with("Here is what your board looks like:")
       expect(io).to receive(:puts).with("You have these ships remaining: frigate, destroyer, cruiser")
@@ -109,11 +109,11 @@ describe Game do
       expect(io).to receive(:puts).with("Which do you wish to place?")
       expect(io).to receive(:gets).and_return("Cruiser")
       expect(io).to receive(:puts).with("Vertical or horizontal? [vh]")
-      expect(io).to receive(:gets).and_return("v")
+      expect(io).to receive(:gets).and_return("h")
       expect(io).to receive(:puts).with("Which row?")
-      expect(io).to receive(:gets).and_return("1")
+      expect(io).to receive(:gets).and_return("3")
       expect(io).to receive(:puts).with("Which column?")
-      expect(io).to receive(:gets).and_return("2")
+      expect(io).to receive(:gets).and_return("4")
       expect(io).to receive(:puts).with("Ship placed successfully!")
       expect(io).to receive(:puts).with("Here is what your board looks like:")
       expect(io).to receive(:puts).with("You have these ships remaining: frigate, destroyer")
@@ -122,11 +122,11 @@ describe Game do
       expect(io).to receive(:puts).with("Which do you wish to place?")
       expect(io).to receive(:gets).and_return("Destroyer")
       expect(io).to receive(:puts).with("Vertical or horizontal? [vh]")
-      expect(io).to receive(:gets).and_return("v")
+      expect(io).to receive(:gets).and_return("h")
       expect(io).to receive(:puts).with("Which row?")
-      expect(io).to receive(:gets).and_return("1")
+      expect(io).to receive(:gets).and_return("2")
       expect(io).to receive(:puts).with("Which column?")
-      expect(io).to receive(:gets).and_return("3")
+      expect(io).to receive(:gets).and_return("4")
       expect(io).to receive(:puts).with("Ship placed successfully!")
       expect(io).to receive(:puts).with("Here is what your board looks like:")
       expect(io).to receive(:puts).with("You have these ships remaining: frigate")
@@ -134,7 +134,7 @@ describe Game do
       expect(io).to receive(:puts).with("Which do you wish to place?")
       expect(io).to receive(:gets).and_return("Frigate")
       expect(io).to receive(:puts).with("Vertical or horizontal? [vh]")
-      expect(io).to receive(:gets).and_return("v")
+      expect(io).to receive(:gets).and_return("h")
       expect(io).to receive(:puts).with("Which row?")
       expect(io).to receive(:gets).and_return("1")
       expect(io).to receive(:puts).with("Which column?")
@@ -142,9 +142,24 @@ describe Game do
       expect(io).to receive(:puts).with("Ship placed successfully!")
       expect(io).to receive(:puts).with("Here is what your board looks like:")
       #### Ship Placement Over ####
-      
-      
+      expect(io).to receive(:puts).with("P1, it is your turn. What would you like to do next?")
+      expect(game.whose_turn_is_it).to eq "P1"
+      expect(io).to receive(:puts).with("1 to bomb opponent, 2 to see your board, 3 to see where you bombed so far")
+      expect(io).to receive(:gets).and_return("2")
+      expect(game.get_current_player.board.return_board_in_array).to eq [
+        [" . ", " . ", " . ", " F ", " F ", " . ", " . ", " . ", " . ", " . "], 
+        [" . ", " . ", " . ", " D ", " D ", " D ", " . ", " . ", " . ", " . "], 
+        [" . ", " . ", " . ", " C ", " C ", " C ", " C ", " . ", " . ", " . "], 
+        [" . ", " . ", " . ", " B ", " B ", " B ", " B ", " B ", " . ", " . "], 
+        [" . ", " . ", " . ", " . ", " . ", " . ", " . ", " . ", " . ", " . "], 
+        [" . ", " . ", " . ", " . ", " . ", " . ", " . ", " . ", " . ", " . "], 
+        [" . ", " . ", " . ", " . ", " . ", " . ", " . ", " . ", " . ", " . "], 
+        [" . ", " . ", " . ", " . ", " . ", " . ", " . ", " . ", " . ", " . "], 
+        [" . ", " . ", " . ", " . ", " . ", " . ", " . ", " . ", " . ", " . "], 
+        [" . ", " . ", " . ", " . ", " . ", " . ", " . ", " . ", " . ", " . "]
+      ]
       game.run
+      
     end
   end
 end

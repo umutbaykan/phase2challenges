@@ -11,6 +11,11 @@ class UserInterface
     return @ship_symbol_to_name[symbol]
   end
 
+  def initiate_victory_message
+    show "Congratulations #{@player.name}, you sank their armada and won the game!"
+    exit
+  end
+
   def swap_to_player(new_player)
     @player = new_player
   end
@@ -23,11 +28,15 @@ class UserInterface
     return @ship_symbols[ship]
   end
 
+  def ship_sunk_message(sunken_ship_name)
+    show "You have sunk your opponents #{sunken_ship_name}!"
+  end
+
   def ask_next_move
     show "#{@player.name}, it is your turn. What would you like to do next?"
     loop do
       choice = prompt "1 to bomb opponent, 2 to see your board, 3 to see where you bombed so far"
-      return choice.to_i if (choice.to_i < 4) && (0 < choice.to_i)
+      return choice.to_i if (choice.to_i <= 4) && (0 < choice.to_i)
       show "Not a valid input."
     end 
   end

@@ -38,6 +38,14 @@ class Game
     @ui.swap_to_player(@current_player)
   end
 
+  def get_current_player
+    @current_player
+  end
+
+  def get_opponent
+    @opponent
+  end
+
   def whose_turn_is_it
     @current_player.name
   end
@@ -53,11 +61,20 @@ class Game
         response = @opponent.board.bomb(coordinates)
         @ui.parse_bomb_response(response)
         if response[:status]
-          ### initiate damage control
+          ship_sunk = @opponent.board.check_for_damage
+          if ship_sunk
+            sunken_ship_name = @ui.convert_ship_symbol_to_name(ship_sunk)
+            @ui.ship_sunk_message(sunken_ship_name)
+            @opponent.remove_ship_from_list(sunken_ship_name)
+            @ui.initiate_victory_message unless @opponent.has_ships?
+          end
+        end
       when 2
         @current_player.board.show_to_player
       when 3
-        @current_player.board.show_to_opponent
+        @opponent.board.show_to_opponent
+      when 4
+        exit
     end
   end
 
@@ -70,12 +87,20 @@ class Game
       system "clear"
     end 
     ## Players ship stack is empty after placement. Replacing it for both of them ##
-    @current_player.regenerate_ships
-    swap_players
-    @current_player.regenerate_ships
+    2.times do
+      @current_player.regenerate_ships
+      swap_players
+      
+    end
     ## Players have now placed their ships. P1 Turn to start the game
-    # user_choice = @ui.ask_next_move
-
-
+    while true
+      choice = 0
+      while choice != 1
+        user_choice(choice)
+        choice = @ui.ask_next_move
+      end
+      user_choice(choice)
+      swap_players
+    end
   end
 end

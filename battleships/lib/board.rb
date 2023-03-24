@@ -100,18 +100,17 @@ class Board
   end
 end
 
-# board = Board.new(6)
-# parameters = {column: 4, row: 4, ship_length: 3, ship_symbol: "C", ship_orientation: "h"}
+# board = Board.new(10)
+# parameters = {column: 4, row: 4, ship_length: 5, ship_symbol: "B", ship_orientation: "h"}
 # board.place_ship(parameters)
-# parameters = {column: 4, row: 3, ship_length: 3, ship_symbol: "B", ship_orientation: "h"}
+# parameters = {column: 4, row: 3, ship_length: 4, ship_symbol: "C", ship_orientation: "h"}
 # board.place_ship(parameters)
 # parameters = {column: 4, row: 2, ship_length: 3, ship_symbol: "D", ship_orientation: "h"}
 # board.place_ship(parameters)
-# parameters = {column: 4, row: 1, ship_length: 3, ship_symbol: "F", ship_orientation: "h"}
+# parameters = {column: 4, row: 1, ship_length: 2, ship_symbol: "F", ship_orientation: "h"}
 # board.place_ship(parameters)
-# board.bomb({column: 1, row: 1})
-# board.bomb({column: 4, row: 4})
-# board.bomb({column: 5, row: 4})
-# board.bomb({column: 1, row: 4})
-# board.show_to_player
-# puts board.check_for_damage
+# # board.bomb({column: 1, row: 1})
+# # board.bomb({column: 4, row: 4})
+# # board.bomb({column: 5, row: 4})
+# # board.bomb({column: 1, row: 4})
+# print board.return_board_in_array
