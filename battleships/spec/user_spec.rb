@@ -5,7 +5,7 @@ describe User do
   let(:u1) { User.new(fake_board, "player") }
   
   it "returns true if user has ships" do
-    expect(u1.user_has_ships?).to eq true
+    expect(u1.has_ships?).to eq true
   end
 
   it "returns a list of ships once called" do

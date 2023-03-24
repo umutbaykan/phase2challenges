@@ -62,7 +62,7 @@ describe Board do
         parameters = {column: 2, row: 2, ship_length: 3, ship_symbol: "C", ship_orientation: "h"}
         board.place_ship(parameters)
         coordinates = {column: 2, row: 2}
-        response = {status: false, message: "Hit!"} 
+        response = {status: true, message: "Hit!"} 
         expect(board.bomb(coordinates)).to eq response
         expect(board.return_board_in_array).to eq [
           [" . "," . "," . "," . "," . "," . "],

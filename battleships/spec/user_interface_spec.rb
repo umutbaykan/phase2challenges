@@ -14,6 +14,18 @@ describe UserInterface do
     expect(ui.convert_ship_symbol_to_name("F")).to eq :frigate
   end
 
+  it "shows bomb response message" do
+    response = {status: false, message: "Missed!"}
+    expect(io).to receive(:puts).with("Missed!")
+    ui.parse_bomb_response(response)  
+  end
+
+  it "shows bomb response message" do
+    response = {status: true, message: "Hit!"}
+    expect(io).to receive(:puts).with("Hit!")
+    ui.parse_bomb_response(response)
+  end
+
   it "asks the user which coordinates why like to fire" do
     allow(fake_player).to receive_message_chain(:board, :length).and_return(6)
     expect(io).to receive(:puts).with("Which row?")

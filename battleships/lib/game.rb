@@ -15,7 +15,7 @@ class Game
 
   def place_user_ships(ui, player)
     @ui.ship_placement_initiate
-    while player.user_has_ships?  
+    while player.has_ships?  
       ui.ship_placement_status
       parameters = ui.prompt_for_ship_placement
       if @current_player.board.check_if_ship_position_suitable(parameters)
@@ -46,6 +46,21 @@ class Game
     @opponent.name
   end
 
+  def user_choice(selection)
+    case selection
+      when 1
+        coordinates = @ui.ask_for_bomb_coordinates
+        response = @opponent.board.bomb(coordinates)
+        @ui.parse_bomb_response(response)
+        if response[:status]
+          ### initiate damage control
+      when 2
+        @current_player.board.show_to_player
+      when 3
+        @current_player.board.show_to_opponent
+    end
+  end
+
   #----- ACTUAL GAME -----#
   def run
     @ui.welcome
@@ -59,6 +74,7 @@ class Game
     swap_players
     @current_player.regenerate_ships
     ## Players have now placed their ships. P1 Turn to start the game
+    # user_choice = @ui.ask_next_move
 
 
   end

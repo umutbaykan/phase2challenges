@@ -9,7 +9,7 @@ class User
     @name
   end
 
-  def user_has_ships?
+  def has_ships?
     @ships.length > 0 ? true : false
   end
 

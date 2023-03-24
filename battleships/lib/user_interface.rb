@@ -32,6 +32,10 @@ class UserInterface
     end 
   end
 
+  def parse_bomb_response(response)
+    show(response[:message])
+  end
+
   def ask_for_bomb_coordinates
     ship_row = ask_for_row
     ship_col = ask_for_col

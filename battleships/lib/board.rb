@@ -73,7 +73,7 @@ class Board
       end
     else
       @board[row][column] = " X "
-      return {status: false, message: "Hit!"} 
+      return {status: true, message: "Hit!"} 
     end
   end
   
