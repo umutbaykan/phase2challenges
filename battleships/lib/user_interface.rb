@@ -23,6 +23,21 @@ class UserInterface
     return @ship_symbols[ship]
   end
 
+  def ask_next_move
+    show "#{@player.name}, it is your turn. What would you like to do next?"
+    loop do
+      choice = prompt "1 to bomb opponent, 2 to see your board, 3 to see where you bombed so far"
+      return choice.to_i if (choice.to_i < 4) && (0 < choice.to_i)
+      show "Not a valid input."
+    end 
+  end
+
+  def ask_for_bomb_coordinates
+    ship_row = ask_for_row
+    ship_col = ask_for_col
+    return {column: ship_col, row: ship_row}
+  end
+
   def welcome
     show "Welcome to Battleships!"
     show "Who does not like sinking opponents ships for fun?"
@@ -58,8 +73,24 @@ class UserInterface
     return @io.gets.chomp
   end
 
+  def ask_for_row
+    loop do
+      ship_row = prompt "Which row?"
+      return ship_row.to_i if ship_row.to_i.abs <= @player.board.length && /^\d+$/.match?(ship_row)
+      show "Invalid location."
+    end
+  end
+
+  def ask_for_col
+    loop do
+      ship_col = prompt "Which column?"
+      return ship_col.to_i if ship_col.to_i.abs <= @player.board.length && /^\d+$/.match?(ship_col)
+      show "Invalid location."
+    end
+  end
+
   def prompt_for_ship_placement
-    formatted_ship_type, formatted_ship_orientation, ship_row, ship_col = "","","",""
+    formatted_ship_type, formatted_ship_orientation = "",""
     loop do
       ship_type = prompt "Which do you wish to place?"
       formatted_ship_type = ship_type.upcase.downcase.to_sym
@@ -72,24 +103,16 @@ class UserInterface
       break if ["h", "v"].include?(formatted_ship_orientation)
       show "That is not a valid direction."
     end
-    loop do
-      ship_row = prompt "Which row?"
-      break if ship_row.to_i.abs <= @player.board.length && /^\d+$/.match?(ship_row)
-      show "Invalid location."
-    end
-    loop do
-      ship_col = prompt "Which column?"
-      break if ship_col.to_i.abs <= @player.board.length && /^\d+$/.match?(ship_col)
-      show "Invalid location."
-    end
+    ship_row = ask_for_row
+    ship_col = ask_for_col
     parameters = {
-      column: ship_col.to_i,
-      row: ship_row.to_i,
+      column: ship_col,
+      row: ship_row,
       ship_length: @ship_sizes[formatted_ship_type],
       ship_symbol: @ship_symbols[formatted_ship_type],
       ship_orientation: formatted_ship_orientation,
       ship_name: formatted_ship_type
     }
     return parameters
-    end
+  end
 end

@@ -14,6 +14,30 @@ describe UserInterface do
     expect(ui.convert_ship_symbol_to_name("F")).to eq :frigate
   end
 
+  it "asks the user which coordinates why like to fire" do
+    allow(fake_player).to receive_message_chain(:board, :length).and_return(6)
+    expect(io).to receive(:puts).with("Which row?")
+    expect(io).to receive(:gets).and_return("2")
+    expect(io).to receive(:puts).with("Which column?")
+    expect(io).to receive(:gets).and_return("4")
+    coordinates = {column: 4, row: 2}
+    expect(ui.ask_for_bomb_coordinates).to eq coordinates
+  end
+
+  it "asks the user for their next move" do
+    allow(fake_player).to receive_message_chain(:board, :length).and_return(6)
+    expect(io).to receive(:puts).with("player, it is your turn. What would you like to do next?")
+    expect(io).to receive(:puts).with("1 to bomb opponent, 2 to see your board, 3 to see where you bombed so far")
+    expect(io).to receive(:gets).and_return("5")
+    expect(io).to receive(:puts).with("Not a valid input.")
+    expect(io).to receive(:puts).with("1 to bomb opponent, 2 to see your board, 3 to see where you bombed so far")
+    expect(io).to receive(:gets).and_return("-3")
+    expect(io).to receive(:puts).with("Not a valid input.")
+    expect(io).to receive(:puts).with("1 to bomb opponent, 2 to see your board, 3 to see where you bombed so far")
+    expect(io).to receive(:gets).and_return("1")        
+    expect(ui.ask_next_move).to eq 1  
+  end
+
   it "shows the user the ships they have remaining to place" do
     expect(io).to receive(:puts).with("You have these ships remaining: frigate, destroyer, cruiser, battleship")
     expect(io).to receive(:puts).with("Frigate is 2 tiles long.")
@@ -64,6 +88,5 @@ describe UserInterface do
       }
       expect(ui.prompt_for_ship_placement).to eq parameters
     end
-
   end
 end

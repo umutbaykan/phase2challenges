@@ -39,7 +39,11 @@ class Game
   end
 
   def whose_turn_is_it
-    @current_player
+    @current_player.name
+  end
+
+  def who_is_the_opponent
+    @opponent.name
   end
 
   #----- ACTUAL GAME -----#
@@ -50,8 +54,12 @@ class Game
       swap_players
       system "clear"
     end 
-    ## Players have now placed their ships. Swapping back to P1 and starting the game
+    ## Players ship stack is empty after placement. Replacing it for both of them ##
+    @current_player.regenerate_ships
     swap_players
+    @current_player.regenerate_ships
+    ## Players have now placed their ships. P1 Turn to start the game
+
 
   end
 end
