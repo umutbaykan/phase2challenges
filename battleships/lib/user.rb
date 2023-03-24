@@ -23,6 +23,10 @@ class User
     return @ships
   end
 
+  def regenerate_ships
+    @ships = [:frigate, :destroyer, :cruiser, :battleship]
+  end
+
   def board
     return @board
   end

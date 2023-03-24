@@ -10,6 +10,10 @@ describe UserInterface do
     ui.ship_placement_initiate
   end
 
+  it "converts the ship symbol to ship name" do
+    expect(ui.convert_ship_symbol_to_name("F")).to eq :frigate
+  end
+
   it "shows the user the ships they have remaining to place" do
     expect(io).to receive(:puts).with("You have these ships remaining: frigate, destroyer, cruiser, battleship")
     expect(io).to receive(:puts).with("Frigate is 2 tiles long.")

@@ -1,6 +1,7 @@
 require 'board'
 
 describe Board do
+
   context "it initializes to a square grid" do
     
     it "provides the size of the grid" do
@@ -72,33 +73,106 @@ describe Board do
           [" . "," . "," . "," . "," . "," . "]
         ]
       end
+
+      it "returns false if every ship is alive" do
+        board = Board.new(6)
+        parameters = {column: 2, row: 2, ship_length: 2, ship_symbol: "C", ship_orientation: "h"}
+        board.place_ship(parameters)
+        parameters = {column: 2, row: 1, ship_length: 2, ship_symbol: "F", ship_orientation: "h"}
+        board.place_ship(parameters)
+        parameters = {column: 2, row: 3, ship_length: 2, ship_symbol: "D", ship_orientation: "h"}
+        board.place_ship(parameters)
+        parameters = {column: 2, row: 4, ship_length: 2, ship_symbol: "B", ship_orientation: "h"}
+        board.place_ship(parameters)
+        coordinates = {column: 2, row: 1}
+        board.bomb(coordinates)
+        expect(board.check_for_damage).to eq false
+        expect(board.ship_symbol_stack).to eq [" F "," C "," D "," B "]
+      end
+
+      it "returns the destroyed ship symbol if it is sunk" do
+        board = Board.new(6)
+        parameters = {column: 2, row: 2, ship_length: 2, ship_symbol: "C", ship_orientation: "h"}
+        board.place_ship(parameters)
+        parameters = {column: 2, row: 1, ship_length: 2, ship_symbol: "F", ship_orientation: "h"}
+        board.place_ship(parameters)
+        parameters = {column: 2, row: 3, ship_length: 2, ship_symbol: "D", ship_orientation: "h"}
+        board.place_ship(parameters)
+        parameters = {column: 2, row: 4, ship_length: 2, ship_symbol: "B", ship_orientation: "h"}
+        board.place_ship(parameters)
+        coordinates = {column: 2, row: 1}
+        board.bomb(coordinates)
+        coordinates = {column: 3, row: 1}
+        board.bomb(coordinates)
+        expect(board.check_for_damage).to eq "F"
+        expect(board.ship_symbol_stack).to eq [" C "," D "," B "]
+      end
+
     end
 
-    it "places a ship in the given coordinates, vertically" do
-      board = Board.new(6)
-      parameters = {column: 2, row: 2, ship_length: 3, ship_symbol: "C", ship_orientation: "v"}
-      board.place_ship(parameters)
-      expect(board.return_board_in_array).to eq [
-        [" . ", " . ", " . ", " . ", " . ", " . "], 
-        [" . ", " C ", " . ", " . ", " . ", " . "], 
-        [" . ", " C ", " . ", " . ", " . ", " . "], 
-        [" . ", " C ", " . ", " . ", " . ", " . "], 
-        [" . ", " . ", " . ", " . ", " . ", " . "], 
-        [" . ", " . ", " . ", " . ", " . ", " . "]]
+    context "when users want to see the board" do
+      it "hides all opponent ships and shows which areas you already bombed" do
+        board = Board.new(6)
+        parameters = {column: 2, row: 2, ship_length: 3, ship_symbol: "C", ship_orientation: "h"}
+        board.place_ship(parameters)
+        coordinates = {column: 1, row: 1}
+        board.bomb(coordinates)
+        expect(board.show_to_opponent).to eq [
+          [" O "," . "," . "," . "," . "," . "],
+          [" . "," . "," . "," . "," . "," . "],
+          [" . "," . "," . "," . "," . "," . "],
+          [" . "," . "," . "," . "," . "," . "],
+          [" . "," . "," . "," . "," . "," . "],
+          [" . "," . "," . "," . "," . "," . "]
+        ]
+      end
+
+      it "shows the player whether their ships have been hit, but does not show opponents missed shots" do
+        board = Board.new(6)
+        parameters = {column: 2, row: 2, ship_length: 3, ship_symbol: "C", ship_orientation: "h"}
+        board.place_ship(parameters)
+        coordinates = {column: 2, row: 2}
+        board.bomb(coordinates)
+        oordinates = {column: 1, row: 1}
+        board.bomb(coordinates)
+        expect(board.show_to_player).to eq [
+          [" . "," . "," . "," . "," . "," . "],
+          [" . "," X "," C "," C "," . "," . "],
+          [" . "," . "," . "," . "," . "," . "],
+          [" . "," . "," . "," . "," . "," . "],
+          [" . "," . "," . "," . "," . "," . "],
+          [" . "," . "," . "," . "," . "," . "]
+        ]
+      end
     end
 
-    it "returns false if the coordinates bombed does not have a ship" do
-      board = Board.new(6)
-      parameters = {column: 2, row: 2, ship_length: 3, ship_symbol: "C", ship_orientation: "h"}
-      board.place_ship(parameters)
-      expect(board.return_board_in_array).to eq [
-        [" . "," . "," . "," . "," . "," . "],
-        [" . "," C "," C "," C "," . "," . "],
-        [" . "," . "," . "," . "," . "," . "],
-        [" . "," . "," . "," . "," . "," . "],
-        [" . "," . "," . "," . "," . "," . "],
-        [" . "," . "," . "," . "," . "," . "]
-      ]
+    context "when user tries to place a ship" do
+      it "does it in the given coordinates, vertically" do
+        board = Board.new(6)
+        parameters = {column: 2, row: 2, ship_length: 3, ship_symbol: "C", ship_orientation: "v"}
+        board.place_ship(parameters)
+        expect(board.return_board_in_array).to eq [
+          [" . ", " . ", " . ", " . ", " . ", " . "], 
+          [" . ", " C ", " . ", " . ", " . ", " . "], 
+          [" . ", " C ", " . ", " . ", " . ", " . "], 
+          [" . ", " C ", " . ", " . ", " . ", " . "], 
+          [" . ", " . ", " . ", " . ", " . ", " . "], 
+          [" . ", " . ", " . ", " . ", " . ", " . "]]
+      end
+
+      it "returns false if the coordinates bombed does not have a ship" do
+        board = Board.new(6)
+        parameters = {column: 2, row: 2, ship_length: 3, ship_symbol: "C", ship_orientation: "h"}
+        board.place_ship(parameters)
+        expect(board.return_board_in_array).to eq [
+          [" . "," . "," . "," . "," . "," . "],
+          [" . "," C "," C "," C "," . "," . "],
+          [" . "," . "," . "," . "," . "," . "],
+          [" . "," . "," . "," . "," . "," . "],
+          [" . "," . "," . "," . "," . "," . "],
+          [" . "," . "," . "," . "," . "," . "]
+        ]
+      end
     end
 
     context "checks whether a ship fits within the board" do

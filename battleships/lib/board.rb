@@ -46,7 +46,7 @@ class Board
 
   def show_to_opponent
     duplicate_board = @board.map(&:clone)
-    duplicate_board.map! {|row| row.map! {|char| ship_symbol_stack.include?(char) ? char = " . " : char }}
+    duplicate_board.map! {|row| row.map! {|char| @ship_symbol_stack.include?(char) ? char = " . " : char }}
     show_board(duplicate_board)
   end
 
@@ -54,6 +54,10 @@ class Board
     duplicate_board = @board.map(&:clone)
     duplicate_board.map! {|row| row.map! {|char| char == " O " ? char = " . " : char }}
     show_board(duplicate_board)
+  end
+
+  def ship_symbol_stack
+    @ship_symbol_stack
   end
 
   def bomb(coordinates)
@@ -73,7 +77,20 @@ class Board
     end
   end
   
-
+  def check_for_damage
+    temp_stack = []
+    @board.each {|row| 
+      row.each{|char| temp_stack.push(char) if @ship_symbol_stack.include?(char) && !temp_stack.include?(char) }}
+    difference = @ship_symbol_stack - temp_stack
+    if difference == []
+      return false
+    else
+      missing_ship = difference[0]
+      @ship_symbol_stack.delete(missing_ship)
+      return missing_ship.strip
+    end
+  end
+  
   def length
     @board.length
   end
@@ -86,12 +103,15 @@ end
 # board = Board.new(6)
 # parameters = {column: 4, row: 4, ship_length: 3, ship_symbol: "C", ship_orientation: "h"}
 # board.place_ship(parameters)
+# parameters = {column: 4, row: 3, ship_length: 3, ship_symbol: "B", ship_orientation: "h"}
+# board.place_ship(parameters)
+# parameters = {column: 4, row: 2, ship_length: 3, ship_symbol: "D", ship_orientation: "h"}
+# board.place_ship(parameters)
+# parameters = {column: 4, row: 1, ship_length: 3, ship_symbol: "F", ship_orientation: "h"}
+# board.place_ship(parameters)
 # board.bomb({column: 1, row: 1})
 # board.bomb({column: 4, row: 4})
-# board.show_actual_board
-# puts ""
-# board.show_to_opponent
-# puts ""
+# board.bomb({column: 5, row: 4})
+# board.bomb({column: 1, row: 4})
 # board.show_to_player
-# puts ""
-# board.show_actual_board
+# puts board.check_for_damage

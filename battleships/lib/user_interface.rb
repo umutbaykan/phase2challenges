@@ -4,6 +4,11 @@ class UserInterface
     @player = player
     @ship_sizes = {frigate: 2, destroyer: 3, cruiser: 4, battleship: 5}
     @ship_symbols = {frigate: "F", destroyer: "D", cruiser: "C", battleship: "B"}
+    @ship_symbol_to_name = @ship_symbols.invert
+  end
+
+  def convert_ship_symbol_to_name(symbol)
+    return @ship_symbol_to_name[symbol]
   end
 
   def swap_to_player(new_player)
